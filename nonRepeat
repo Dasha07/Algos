@@ -1,0 +1,9 @@
+function nonRepeat(str) {
+  for (var i = 0; i < str.length; i++) {
+    var newStr = string.charAt(i);
+    if (str.indexOf(c) == i && str.indexOf(newStr, i + 1) == -1) {
+      return newStr;
+    }
+  }
+  return null;
+}

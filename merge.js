@@ -15,14 +15,13 @@ function mergeSortedArray(a,b){
     }
     return tempArray;
 }
-console.log(mergeSortedArray(["strong"],["string"]));
+console.log(mergeSortedArray([1,2,5,6,7],[8,9,10]));
 
-var s1 = "string";
+var s1 = "string"
 var s2 ="strong";
 
 function common() {
   var newStr = {};
-  
   for(var i=0; i < s1.length; i++) {
     newStr[s1.charAt(i)] = 1;
   }
