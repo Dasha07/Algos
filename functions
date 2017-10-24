@@ -1,0 +1,128 @@
+const FN1 = 'fn1';
+const FN2 = 'fn2';
+const EMPTY = undefined;
+
+const jn = function(fn1, fn2) {
+    return (sel) => {
+        switch(sel) {
+            case FN1: return fn1;
+            case FN2: return fn2;
+            default: return undefined;
+        }
+    }
+};
+
+const fn1 = function(jn) { return jn(FN1); };
+const fn2 = function(jn) { return jn(FN2); };
+
+const map = function(list, fn) {
+    if (list === EMPTY) { return; }
+    if (isList(fn1(list))) {
+        return jn(map(fn1(list), fn), map(fn2(list), fn));
+    }
+    return jn(fn(fn1(list)), map(fn2(list), fn));
+};
+
+const forEach = function(list, fn) {
+    if(isPair(list) || isAtomic(list)) {
+        fn(list);
+    } else if(list !== EMPTY) {
+        fn(fn1(list));
+        forEach(fn2(list), fn);
+    }
+};
+
+const list = function() {
+    let iter = (ls, i) => {
+        if (ls[i] === undefined) { return EMPTY; }
+        return jn(ls[i], iter(ls, i+1));
+    }
+    return iter(arguments, 0);
+};
+
+const pairToString = function(pair) {
+    return `[${fn1(pair)} | ${fn2(pair)}]`;
+}
+
+const listToString = function(ls) {
+    let str = ''
+    forEach(ls, (x) => {
+        if (isPair(x)) { str += `${pairToString(x)}, `; }
+        else if (isList(x)) { str += `${toString(x)}, `; } 
+        else { str += `${x}, `; }
+    });
+    return `[${str.substr(0, str.length-2)}]`;
+}
+
+const toString = function(input) {
+    if (isPair(input)) {
+        return pairToString(input);
+    } else if(isList(input)) {
+        return listToString(input);
+    }
+};
+
+const print = function(ls) { console.log(toString(ls)); };
+
+const IS_FN = function(fn) { return typeof fn === 'function'; };
+const IS_EL = function(fn) { return !IS_FN(fn); };
+const IS_TER = function(pair) { return fn2(pair) === undefined; };
+const IS_PAIR = function(pair) { return IS_EL(fn1(pair)) && IS_EL(fn2(pair)); };
+
+const isAtomic = function(primitive) { return IS_EL(primitive) && primitive !== undefined; };
+const isPair = function(pair) { return IS_FN(pair) ? IS_PAIR(pair) && !IS_TER(pair) : false; };
+const isList = function(ls) { return IS_FN(ls) && !isPair(ls); };
+
+
+
+function append(ls1, ls2) {
+    if(ls1 === EMPTY) { 
+        return ls2; 
+    }
+    return jn(fn1(ls1), append(fn2(ls1), ls2));
+}
+
+function pairToList(pair) {
+    return list(fn1(pair), fn2(pair));
+}
+
+function flatten(ls) {
+    if(ls === EMPTY) { return EMPTY; }
+    if(isList(fn1(ls))) { return append(flatten(fn1(ls)), flatten(fn2(ls))); }
+    if(isPair(fn1(ls))) { return append(pairToList(fn1(ls)), flatten(fn2(ls))); }
+    return jn(fn1(ls), flatten(fn2(ls)));
+}
+
+
+console.log(isList(list('a', 'b')));
+print(jn(1, 2));
+print(pairToList(jn(1, 2)));
+let list0 = jn(jn(1, 2), jn(3, jn(4, EMPTY)));
+print(list0);
+
+let list1 = jn(1, jn(jn('a', jn('b', EMPTY)), jn(3, jn(4, EMPTY))));
+print(list1);
+
+let list2 = list(1, list('a', 'b', list(5, 4, 3, 2, 1), jn('first', 'second'), list('c', 'd')), 3, 4, list1);
+print(list2);
+
+let list3 = flatten(list2);
+print(list3);
+
+let pair = jn(1, 2);
+let ls = list(1, 2, jn(1, 2), 3, jn(4, 5));
+console.log(isPair(pair));
+console.log(isList(pair));
+console.log(isList(ls));
+console.log(isPair(ls));
+print(ls);
+print(flatten(ls));
+console.log(isPair(jn(2, 3)));
+print(jn(1, jn(0, jn(2, 3))));
+
+print(jn(1, jn(2, (jn(3, 4)))));
+print(jn(1, jn(2, 3)));
+print(list(jn(1, 2), 3));
+print(jn(jn(1, 2), jn(3, 4)));
+
+print(jn(jn(1, 2), false));

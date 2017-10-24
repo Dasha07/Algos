@@ -10,19 +10,19 @@ Print();
 
 //Print All Odd and Even Num;
 
-function printEven() {
-        for (var i = 0; i < 10; i++){
-            if ((i % 2) == 0)
-                console.log (i + ' ');
-        }
-    }
+// function printEven() {
+//         for (var i = 0; i < 10; i++){
+//             if ((i % 2) == 0)
+//                 console.log (i + ' ');
+//         }
+//     }
 
-    function printOdd() {
-        for (var i = 0; i < 10; i++){
-            if ((i % 2) !== 0) 
-                console.log(i + ' ');
-        }
-    }
-printEven();
-printOdd();
+//     function printOdd() {
+//         for (var i = 0; i < 10; i++){
+//             if ((i % 2) !== 0) 
+//                 console.log(i + ' ');
+//         }
+//     }
+// printEven();
+// printOdd();
 
